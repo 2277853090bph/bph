@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>中国四大发明</title>
+<script src="jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="a.css">
+<link rel="stylesheet" href="b.css">
+</head>
+<body>
+<div id="demo-top-bar">
+    <div id="demo-bar-inside">
+        <h2 id="demo-bar-badge"> <a href="/">中国四大发明</a> </h2>
+        <div id="demo-bar-buttons"> <a class='header-button' href='#'>&larr; 返回</a> </div>
+    </div>
+</div>
+<div class="page-wrap">
+        <div class="gallery">
+            <a href="#">
+                <img src="images/zhaozhishu.png" alt="造纸术" class="zhaozhishu" data-name="zhaozhishu"/>
+            </a>
+            <a href="#">
+                <img src="images/huoyao.png" alt="火药" class="huoyao" data-name="huoyao"/>
+            </a>
+            <a href="#">
+                <img src="images/yinshuashu.png" alt="印刷术" class="yinshuashu" data-name="yinshuashu"/>
+            </a>
+            <a href="#">
+                <img src="images/zhinanzhen.png" alt="指南针" class="zhinanzhen" data-name="zhinanzhen">
+            </a>
+        </div>    
+    <p class="selected">中国四大发明</p>
+    <p class="highlight"></p>
+    <div class="content"></div>
+</div>
+<script>
+			$(document).ready(function(){
+				 
+	              $("img").click(function(e){
+					   e.preventDefault();//很重要
+					 $("img").removeClass("current");
+					 var url=$(this).attr("data-name");
+					 $(this).addClass("current");
+					 var file=url+".html"
+					history.pushState(url,null,file);
+		          $(".content").load( file + ' .content');
+				  $(".highlight").load(file+' h1');
+				  document.title="中国四大发明 | "+$(this).attr("alt");
+	   }
+	   )
+	   
+	   window.addEventListener('popstate', function(e){
+	       var characters = e.state;
+		   var character=characters+".html";
+		
+	       if (characters == null) {
+	           $("img").removeClass("current");
+	          $(".highlight").text('');
+               $(".content").text('');
+	           document.title = "中国四大发明 aaaa";
+	       } else {
+			     // alert(character);  
+				 $("img").removeClass("current");
+	           $(".highlight").load(character+' h1');
+	          $(".content").load(character+' .content');
+ 	           $("img."+characters).addClass("current");
+ 	           document.title = "中国四大发明 | " +  $("img."+characters).attr("alt");
+	       }
+	   })
+		
+	  })
+	
+		</script>
+</body>
+</html> 
+
+
