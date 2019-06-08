@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+	  <style>
+			td{
+				text-align: right;
+			}
+		</style>
+	</head>
+	<body>
+		<table id="a">
+			
+		</table>
+		
+		<script>
+ 			var n=prompt("请输入行数");
+			var m=prompt("请输入列数");
+			var a=[];
+			for(var i=0;i<n;i++)
+			{   a[i]=[];
+				for(var j=0;j<m;j++){
+				a[i][j]=0;	
+				}
+				
+			}
+		var count=1;
+		for(var i=0;i<=m+n-2;i++)		
+		{			
+			for(var x=0;  x<=i&&(x<n)&&i-x<m;x++)			
+		     {				
+			   a[x][i-x]=count++;				
+			 }			
+		     for(var y=m-1;  y>=0&&i-y>=0&&i-y<n&&i-y>0;y--)			
+		    {			
+			    a[i-y][y]=count++;				
+		    }
+		}
+		
+		
+	   var list=a;
+	   var str='';
+	   for(var i in list){
+		  str+="<tr>"
+		  for(var j in list[i])
+		  {
+		  	str+="<td>"+list[i][j]+"</td>";
+			
+		  }
+		   str+="</tr>"
+	   }
+	   alert(str);
+	   document.getElementById("a").innerHTML=str;
+	    
+	   
+	   
+	    
+		</script> 
+	</body>
+</html>

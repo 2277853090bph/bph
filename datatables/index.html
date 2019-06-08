@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>dataTables</title>
+	  
+	  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+	  
+      <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+      <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+	  
+	  <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.15/css/jquery.dataTables.css">
+	  <script src="http://cdn.datatables.net/1.10.15/js/jquery.dataTables.js"></script>
+	  
+	  <script src="https://cdn.bootcss.com/bootbox.js/4.4.0/bootbox.js"></script>
+	  <link rel="stylesheet" href="a.css">
+  </head>
+  <body>
+        <!-- 界面主体-->
+	    <div class="TabBox" style="width:90%;margin:20px auto;border-top:1px solid black">
+			<!--增删改按钮组-->
+			<div class="but" style="margin-left:82%;padding:5px">
+				<button id="addrow" class="btn btn-sm bg-primary">新增</button>
+				<button id="modifyrow" class="btn btn-sm bg-warning">修改</button>
+				<button id="delrow" class="btn btn-sm bg-info">删除</button>
+			</div>
+			<!--表格-->
+			<table class="table-striped" id="table" width="100%">
+			  <thead>
+				<tr>
+				  <th>序号</th>
+				  <th>书名</th>
+				  <th>作者</th>
+				  <th>价格</th>
+				  <th>出版社</th>
+				  <th>ISBN</th>
+				</tr>
+			  </thead>
+			  <tbody>
+			  </tbody>
+			</table>
+        </div>
+	  
+        <!--添加图书的模态框-->
+		<div class="modal fade" id="add" role="dialog">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			   <!--模态框头部-->
+			  <div class="modal-header">
+				<h4 class="modal-title">添加图书</h4>
+			  </div>
+			   <!--模态框主体-->
+			  <div id="addModal" class="modal-body">
+				<div class="form-horizontal">
+				  <div class="form-group">
+					  <label for="bookName">书名:*</label>
+					  <input  id="bookName" type="text">
+				  </div>
+				  <div class="form-group">
+					  <label for="bookAuthor">作者:*</label>
+					  <input  id="bookAuthor" type="text">
+				  </div>
+				  <div class="form-group">
+					  <label for="bookPrice" >价格:*</label>
+					  <input  id="bookPrice" type="text">
+				  </div>
+				  <div class="form-group">
+						<label for="bookPublish" >出版社:*</label>
+						<input  id="bookPublish" type="text">
+				  </div>
+				  <div class="form-group">
+						 <label for="bookISBN">ISBN:*</label>
+						 <input  id="bookISBN" type="text">
+				  </div>
+				</div>
+			  </div>
+			   <!--		模态框尾部-->
+			  <div class="modal-footer">
+				<div style="margin:0 auto">
+				  <button id="cancelAdd" type="button" class="btn btn-outline-secondary btn-light" data-dismiss="modal">取消</button>
+				  <button id="confirmAdd" type="button" class="btn bg-primary" data-dismiss="modal">保存</button>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  
+        <!--修改模态框-->
+	    <div class="modal fade" id="edit" role="dialog">
+            <div class="modal-dialog">
+			    <div class="modal-content">
+					   <!--模态框头部-->
+					  <div class="modal-header">
+						<h4 class="modal-title">修改图书</h4>
+					  </div>
+					   <!--模态框主体-->
+					  <div id="editModal" class="modal-body">
+						<div class="form-horizontal">
+						  <div class="form-group">
+							  <label for="editBookName">书名:*</label>
+							  <input  id="editBookName" type="text">
+						  </div>
+						  <div class="form-group">
+					          <label for="editBookAuthor">作者:*</label>
+							  <input  id="editBookAuthor" type="text">
+						  </div>
+						  <div class="form-group">
+							  <label for="editBookPrice" >价格:*</label>
+							  <input  id="editBookPrice" type="text">
+						  </div>
+						  <div class="form-group">
+								<label for="editBookPublish" >出版社:*</label>
+								<input  id="editBookPublish" type="text">
+						  </div>
+						  <div class="form-group">
+								<label for="editBookISBN">ISBN:*</label>
+								<input  id="editBookISBN" type="text">
+						  </div>
+						</div>
+					  </div>
+					  <div class="modal-footer">
+						<div style="margin:0 auto">
+						  <button id="cancelEdit" type="button" class="btn btn-outline-secondary  btn-light" data-dismiss="modal">取消</button>
+						  <button id="confirmEdit" type="button" class="btn btn-primary" data-dismiss="modal">保存</button>
+						</div>
+					  </div>
+				</div>
+			  </div>
+		</div>
+	   
+	  	  
+<script>
+    $(document).ready(function(){
+    //配置datatable
+    var tab=$('#table').DataTable({
+		    pageLength :10,//默认每页显示多少条记
+            lengthMenu: [3,5,10,15,20],//长度菜单
+            language: {
+                lengthMenu:"每页显示_MENU_条记录",
+                zeroRecords:"没有匹配的数据",
+                info:"第_PAGE_页（总共_PAGES_页)",
+				infoEmpty:"第0页（总共0页)",
+                search:"搜索",
+                infoFiltered: "(从 _MAX_条记录中过滤)",
+                paginate: {"next": "下一页", "previous": "上一页" }
+            }
+	   });
+	 var titles = ['书名', '作者', '价格', '出版社', 'ISBN']
+	 //读取json文件
+	 $.getJSON("doc.json", function (data) { 
+		  $.each(data,function(i,item){
+			 
+			  tab.row.add(['',item[0],item[1], item[2], item[3], item[4]]).draw(); 
+		  })
+        });
+		
+	
+	//添加序号
+	tab.on('order.dt search.dt', function() {
+      tab.column(0, {
+        search: 'applied',
+        order: 'applied'
+      }).nodes().each(function(cell, i) {
+        cell.innerHTML = i + 1;
+      });
+    }).draw();
+	
+	//选择一行时变蓝
+	 $('tbody').on('click', 'tr', function () {
+		 $(this).addClass("selected").siblings().removeClass("selected");
+    });
+	//------------------------------------------------------------------------------
+    //添加数据按钮
+	$("#addrow").on("click",function(){
+      $("#add").modal()
+    });
+	// 确认添加按钮
+    $("#confirmAdd").on('click', function() { 
+		  var bookName = $("#bookName").val()
+          var bookAuthor = $("#bookAuthor").val()
+          var bookPrice = $("#bookPrice").val()
+          var bookPublish = $("#bookPublish").val()
+          var bookISBN = $("#bookISBN").val()
+          var addBookInfos = [].concat(bookName, bookAuthor, bookPrice, bookPublish, bookISBN);
+		  //实数
+		  var r=/^[-\+]?\d+(\.\d+)?$/;
+		  var result1=r.test(bookPrice);
+		  var result2=true;
+		  for(var i in addBookInfos)
+			{   
+				if(addBookInfos[i]=== '')
+				{
+					alert(titles[i]+"未输入值");
+					result2=false;
+					$("#addModal").find('input').val('')
+				}
+			}
+		if(result1==false){
+			alert("价格必须为数字");
+			$("#addModal").find('input').val('')
+			}
+		if(result1==true&&result2==true)
+			{
+			  tab.row.add(['', bookName, bookAuthor, bookPrice, bookPublish, bookISBN]).draw();
+              $("#addModal").find('input').val('')
+          }
+    })	
+	// 取消添加按钮
+    $("#cancelAdd").on('click', function() {
+      $("#add").find('input').val('')
+    })
+  
+   
+		
+    //-------------------------------------------------------------------------------
+	// 编辑图书按钮
+    $('#modifyrow').on("click",function () {
+      if (tab.rows('.selected').data().length) {
+		 // alert(tab.rows('.selected').data()[0])
+		  $("#edit").modal();
+	    //表示被选择行的数据数组
+        var rowData = tab.rows('.selected').data()[0];
+        var inputs = $("#edit").find('input')
+        for (var i = 0; i < inputs.length; i++) {
+          $(inputs[i]).val(rowData[i + 1])
+        }
+      } else {
+        alert('请选择项目');
+      }
+    });
+	
+    // 保存编辑按钮
+    $("#confirmEdit").on("click",function() {
+      var editBookName = $("#editBookName").val()
+      var editBookAuthor = $("#editBookAuthor").val()
+      var editBookPrice = $("#editBookPrice").val()
+      var editBookPublish = $("#editBookPublish").val()
+      var editBookISBN = $("#editBookISBN").val()
+      var newRowData = [].concat(editBookName, editBookAuthor, editBookPrice, editBookPublish, editBookISBN);
+	 
+	  
+	  //实数
+	  	  var r=/^[-\+]?\d+(\.\d+)?$/;
+	  	  var result1=r.test(editBookPrice);
+	  	  var result2=true;
+	  	  for(var i in newRowData)
+	  		{   
+	  			if(newRowData[i]=== '')
+	  			{
+	  				alert(titles[i]+"未输入值");
+	  				result2=false;
+	  				$("#editModal").find('input').val('')
+	  			}
+	  		}
+	  	if(result1==false){
+	  		alert("价格必须为数字");
+	  		$("#editModal").find('input').val('')
+	  		}
+	  	if(result1==true&&result2==true)
+	  		{
+				tab.row(".selected").data( [""].concat(newRowData) ).draw();
+	            $("#editModal").find('input').val('')
+	        }
+	  })	
+	 
+    // 取消保存按钮
+    $("#cancelEdit").on("click",function() {
+      $("#editModal").find('input').val('');
+    })
+		
+    //-------------------------------------------------------------------------------
+	//bootbox实现删除
+		$("#delrow").on("click",function(){
+				if(tab.rows(".selected").data().length)
+				{
+					 bootbox.confirm({
+							 message: "确定要删除吗?",
+							 buttons: {
+										 confirm: {
+											label: '是',
+											className: 'btn-success'
+										 },
+										 cancel: {
+											label: '否',
+											className: 'btn-danger'
+										}
+							},
+							callback: function (result) {
+								if(result){
+								tab.row(".selected").remove().draw(false);	
+								}
+							}
+					})
+					
+				}else{
+					alert("请选择项目");
+				}
+				
+			})
+			})
+	
+		
+			
+		
+</script>
+	  
+  </body>
+</html>

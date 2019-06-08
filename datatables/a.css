@@ -1,0 +1,17 @@
+.form-group{
+	clear:both;
+	width:70%;
+	margin:0 auto;
+	
+}
+.form-group input{
+	display:block;
+	float:right;
+	
+}
+.form-group label{
+	display:block;
+	float:left;
+	width:20%;
+	text-align: right;
+}
